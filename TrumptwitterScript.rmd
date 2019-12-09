@@ -1,0 +1,96 @@
+---
+title: "Digital management"
+author: "Mette Bonnema"
+date: "11/11/2019"
+output:
+  word_document: default
+  html_document: default
+---
+RStudios opgave - Trump og Obama hashtags  
+
+```{r}
+library(rtweet)
+library(tidyverse)
+library(tidytext)
+library(magrittr)
+```
+
+
+```{r}
+trumptweets <- search_tweets(q = "#Trump", n = 10000,
+                                      lang = "en",
+                                      include_rts = FALSE)
+```
+
+```{r}
+head(trumptweets$text)
+```
+
+```{r}
+trumptweets_ttm <- trumptweets %>%
+  select(text) %>%
+  unnest_tokens(word,text)
+
+trumptweets_ttm
+```
+
+```{r}
+trumptweets_ttm %>%
+  count(word, sort = TRUE) %>%
+  top_n(15) %>%
+  mutate(word = reorder(word, n)) %>%
+  ggplot(aes(x = word, y = n)) +
+  geom_col()+
+  xlab(NULL) +
+  coord_flip() +
+      labs(x = "Count",
+      y = "Unique words",
+      title = "Count of unique words found in trump tweets")
+```
+
+
+```{r}
+trumptweets_ttm <- trumptweets %>% 
+  mutate(text = 
+           str_remove_all(
+                          text, 
+                          pattern = 
+                            "https.*")) %>% 
+  mutate(text = 
+           str_remove_all(
+                          text, 
+                          pattern = 
+                            "http.*")) %>% 
+  unnest_tokens(word,text)
+head(trumptweets_ttm)
+```
+
+```{r}
+stopord <- read_csv("https://gist.githubusercontent.com/mettebonnema/1560a066ea789dab0c4a991192abe1ac/raw/7cc9e309a572b447cc27719d04481cf015110ead/englishstopwordlist.txt")
+stopord
+```
+
+```{r}
+trumptweets_ttm <- trumptweets_ttm %>% 
+anti_join(stopord)
+```
+
+```{r}
+trumptweets_ttm %>%
+  count(word, sort = TRUE) %>%
+  top_n(15) %>%
+  mutate(word = reorder(word, n)) %>%
+  ggplot(aes(x = word, y = n)) +
+  geom_col() +
+  xlab(NULL) +
+  coord_flip() +
+      labs(x = "Count",
+      y = "Unique words",
+      title = "Count of unique words found in trump tweets")
+```
+
+```{r}
+write.csv(trumptweets,"trumptweets.csv", row.names = FALSE)
+
+```
+

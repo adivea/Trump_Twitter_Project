@@ -1,18 +1,17 @@
 ---
 title: "Digital management"
 author: "Mette Bonnema"
-date: "11/11/2019"
+date: "03/01/2019"
 output:
   word_document: default
   html_document: default
 ---
-RStudios opgave - Trump og Obama hashtags  
+RStudios opgave - Trump hashtags  
 
 ```{r}
 library(rtweet)
 library(tidyverse)
 library(tidytext)
-library(magrittr)
 ```
 
 
@@ -30,7 +29,9 @@ head(trumptweets$text)
 trumptweets_ttm <- trumptweets %>%
   select(text) %>%
   unnest_tokens(word,text)
+```
 
+```
 trumptweets_ttm
 ```
 
@@ -48,25 +49,8 @@ trumptweets_ttm %>%
       title = "Count of unique words found in trump tweets")
 ```
 
-
 ```{r}
-trumptweets_ttm <- trumptweets %>% 
-  mutate(text = 
-           str_remove_all(
-                          text, 
-                          pattern = 
-                            "https.*")) %>% 
-  mutate(text = 
-           str_remove_all(
-                          text, 
-                          pattern = 
-                            "http.*")) %>% 
-  unnest_tokens(word,text)
-head(trumptweets_ttm)
-```
-
-```{r}
-stopord <- read_csv("https://gist.githubusercontent.com/mettebonnema/1560a066ea789dab0c4a991192abe1ac/raw/7cc9e309a572b447cc27719d04481cf015110ead/englishstopwordlist.txt")
+stopord <- read_csv("https://gist.githubusercontent.com/mettebonnema/1560a066ea789dab0c4a991192abe1ac/raw/d9d3a7d6dd2c7771863014527ece0b547a7c1f7d/englishstopwordlist.txt")
 stopord
 ```
 

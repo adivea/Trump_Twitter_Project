@@ -6,7 +6,7 @@ output:
   word_document: default
   html_document: default
 ---
-RStudios opgave - Trump hashtags  
+RStudios assignment - Trump hashtags  
 
 ```{r}
 library(rtweet)
@@ -72,9 +72,3 @@ trumptweets_ttm %>%
       y = "Unique words",
       title = "Count of unique words found in trump tweets")
 ```
-
-```{r}
-write.csv(trumptweets,"trumptweets.csv", row.names = FALSE)
-
-```
-
